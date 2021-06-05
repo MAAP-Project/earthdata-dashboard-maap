@@ -71,8 +71,8 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
       // https://docs.mapbox.com/help/glossary/tileset-id/
       tiles: [ 'http://localhost:8080/data/atl08/{z}/{x}/{y}.pbf' ],
       url: 'http://localhost:8080/data/atl08.json',
-      'minzoom': 1,
-      'maxzoom': 18      
+      // 'minzoom': 1,
+      // 'maxzoom': 18      
     });
     //id = 'ATL08-vector';
     console.log('loading source')  
@@ -93,10 +93,16 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
       'source-layer': 'atl08sample',
       'source': id,
       'paint': {
-        'circle-radius': 5,
-        'circle-stroke-width': 1,
-        'circle-color': 'white',
-        'circle-stroke-color': 'red'
+        'circle-radius': 4,
+        //'circle-stroke-width': 1,
+        'circle-color': {
+          property: 'Z',
+          stops: [
+            [0, '#fff'],
+            [250, '#000']
+          ]
+        },
+        'circle-stroke-color': 'orange'
       }      
     })  
     // mbMap.addLayer(
