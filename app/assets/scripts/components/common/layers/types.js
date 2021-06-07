@@ -90,16 +90,16 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
     mbMap.addLayer({
       'id': id,
       'type': 'circle',
-      'source-layer': 'atl08sample',
+      'source-layer': 'atl08',
       'source': id,
       'paint': {
-        'circle-radius': 4,
+        'circle-radius': 10,
         //'circle-stroke-width': 1,
         'circle-color': {
           property: 'Z',
           stops: [
             [0, '#fff'],
-            [250, '#000']
+            [250, '#ffa500']
           ]
         },
         'circle-stroke-color': 'orange'
