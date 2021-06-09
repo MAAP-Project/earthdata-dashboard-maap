@@ -62,21 +62,13 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
   if (mbMap.getSource(id)) {
     mbMap.setLayoutProperty(id, 'visibility', 'visible');
   } else {
-    source.data = source.tiles[0];
-    delete source['tiles'];
-    mbMap.addSource(id, {
-      type: 'vector',
-      // Use any Mapbox-hosted tileset using its tileset id.
-      // Learn more about where to find a tileset id:
-      // https://docs.mapbox.com/help/glossary/tileset-id/
-      tiles: [ 'http://localhost:8080/data/atl08/{z}/{x}/{y}.pbf' ],
-      url: 'http://localhost:8080/data/atl08.json',     
-    }); 
+    mbMap.addSource(id, source);
     mbMap.addLayer(
       {
         id: id,
         type: type,
         source: id,
+        'source-layer': source['source_layer'],
         layout: {},
         paint
       },
@@ -328,9 +320,9 @@ export const layerTypes = {
       const rasterL = {
         ...backgroundSource,
         tiles: backgroundSource.tiles
-        // .map((tile) =>
-        //   tile.replace('{date}', formatDate)
-        // )
+        .map((tile) =>
+          tile.replace('{date}', formatDate)
+        )
       };
 
       toggleOrAddLayer(
@@ -354,11 +346,6 @@ export const layerTypes = {
     }
   },
   'vector': {
-    update: (ctx, layerInfo, prevProps) => {
-      const { props, mbMap } = ctx;
-      const { id, source, backgroundSource } = layerInfo;
-      const vecId = `${id}-vector`;
-    },
     hide: (ctx, layerInfo) => {
       const { mbMap } = ctx;
       const { id } = layerInfo;
@@ -371,22 +358,15 @@ export const layerTypes = {
     },
     show: (ctx, layerInfo) => {
       console.log('in vector case');
-      const { props, mbMap } = ctx;
-      const { id, source } = layerInfo;
+      console.log(layerInfo);
+
+      const { mbMap } = ctx;
+      const { id, source, paint } = layerInfo;
       const vecId = `${id}-vector`;
 
-      const inferPaint = {
-        'line-color': '#f2a73a',
-        'line-opacity': 0.8,
-        'line-width': 2
-      };
       const vectorL = {
         ...source,
         data: source.data
-      };
-      const rasterL = {
-        ...backgroundSource,
-        tiles: backgroundSource.tiles
       };
 
       toggleOrAddLayer(
@@ -394,7 +374,7 @@ export const layerTypes = {
         vecId,
         vectorL,
         'circle',
-        inferPaint,
+        paint,
         'admin-0-boundary-bg'
       );
     }
