@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - abarciauskas-bgse_point-data-layer
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
