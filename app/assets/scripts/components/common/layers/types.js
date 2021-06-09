@@ -265,7 +265,7 @@ export const layerTypes = {
       ) { return; }
 
       // The source we're updating is not present.
-      //if !mbMap.getSource(vecId) return;
+      if (!mbMap.getSource(vecId) || !mbMap.getSource(rastId)) return;
       const formatDate = format(date, dateFormats[layerInfo.timeUnit]);
       const vectorData = source.data.replace('{date}', formatDate);
       const rasterTiles = backgroundSource.tiles.map((tile) =>
@@ -302,7 +302,7 @@ export const layerTypes = {
     show: (ctx, layerInfo) => {
       const { props, mbMap } = ctx;
       const { date } = props;
-      const { id, source } = layerInfo;
+      const { id, source, backgroundSource } = layerInfo;
       const vecId = `${id}-vector`;
       const rastId = `${id}-raster`;
       if (!date) return;
@@ -315,12 +315,11 @@ export const layerTypes = {
       const formatDate = format(date, dateFormats[layerInfo.timeUnit]);
       const vectorL = {
         ...source,
-        data: source.data//.replace('{date}', formatDate)
+        data: source.data.replace('{date}', formatDate)
       };
       const rasterL = {
         ...backgroundSource,
-        tiles: backgroundSource.tiles
-        .map((tile) =>
+        tiles: backgroundSource.tiles.map((tile) =>
           tile.replace('{date}', formatDate)
         )
       };
