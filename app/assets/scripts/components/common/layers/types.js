@@ -70,51 +70,18 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
       // Learn more about where to find a tileset id:
       // https://docs.mapbox.com/help/glossary/tileset-id/
       tiles: [ 'http://localhost:8080/data/atl08/{z}/{x}/{y}.pbf' ],
-      url: 'http://localhost:8080/data/atl08.json',
-      // 'minzoom': 1,
-      // 'maxzoom': 18      
-    });
-    //id = 'ATL08-vector';
-    console.log('loading source')  
-    // mbMap.addLayer({
-    //   'id': id,
-    //   'type': 'circle',
-    //   'source': id,
-    //   'paint': {
-    //     'circle-radius': 5,
-    //     'circle-stroke-width': 1,
-    //     'circle-color': 'white',
-    //     'circle-stroke-color': 'red'
-    //   }
-    // });  
-    mbMap.addLayer({
-      'id': id,
-      'type': 'circle',
-      'source-layer': 'atl08',
-      'source': id,
-      'paint': {
-        'circle-radius': 2,
-        'circle-opacity': 0.7,
-        'circle-color': {
-          property: 'Z',
-          stops: [
-            [0, '#fff'],
-            [1000, '#ffa500']
-          ]
-        },
-        'circle-stroke-color': 'orange'
-      }      
-    })  
-    // mbMap.addLayer(
-    //   {
-    //     id: id,
-    //     type: type,
-    //     source: id,
-    //     layout: {},
-    //     paint
-    //   },
-    //   beforeId
-    // );
+      url: 'http://localhost:8080/data/atl08.json',     
+    }); 
+    mbMap.addLayer(
+      {
+        id: id,
+        type: type,
+        source: id,
+        layout: {},
+        paint
+      },
+      beforeId
+    );
   }
 };
 
@@ -294,7 +261,7 @@ export const layerTypes = {
       const { date } = props;
       const { id, source, backgroundSource } = layerInfo;
       const vecId = `${id}-vector`;
-      //const rastId = `${id}-raster`;
+      const rastId = `${id}-raster`;
 
       // Do not update if:
       if (
@@ -309,9 +276,9 @@ export const layerTypes = {
       //if !mbMap.getSource(vecId) return;
       const formatDate = format(date, dateFormats[layerInfo.timeUnit]);
       const vectorData = source.data.replace('{date}', formatDate);
-      // const rasterTiles = backgroundSource.tiles.map((tile) =>
-      //   tile.replace('{date}', formatDate)
-      // );
+      const rasterTiles = backgroundSource.tiles.map((tile) =>
+        tile.replace('{date}', formatDate)
+      );
 
       // inference data moves around, recenter on each update
       fetch(vectorData)
@@ -324,7 +291,7 @@ export const layerTypes = {
         });
 
       replaceVectorData(mbMap, vecId, vectorData);
-      //replaceRasterTiles(mbMap, rastId, rasterTiles);
+      replaceRasterTiles(mbMap, rastId, rasterTiles);
     },
     hide: (ctx, layerInfo) => {
       const { mbMap } = ctx;
@@ -345,7 +312,7 @@ export const layerTypes = {
       const { date } = props;
       const { id, source } = layerInfo;
       const vecId = `${id}-vector`;
-      //const rastId = `${id}-raster`;
+      const rastId = `${id}-raster`;
       if (!date) return;
 
       const inferPaint = {
@@ -358,13 +325,13 @@ export const layerTypes = {
         ...source,
         data: source.data//.replace('{date}', formatDate)
       };
-      // const rasterL = {
-      //   ...backgroundSource,
-      //   tiles: backgroundSource.tiles
-      //   // .map((tile) =>
-      //   //   tile.replace('{date}', formatDate)
-      //   // )
-      // };
+      const rasterL = {
+        ...backgroundSource,
+        tiles: backgroundSource.tiles
+        // .map((tile) =>
+        //   tile.replace('{date}', formatDate)
+        // )
+      };
 
       toggleOrAddLayer(
         mbMap,
@@ -374,7 +341,7 @@ export const layerTypes = {
         inferPaint,
         'admin-0-boundary-bg'
       );
-      //toggleOrAddLayer(mbMap, rastId, rasterL, 'raster', {}, vecId);
+      toggleOrAddLayer(mbMap, rastId, rasterL, 'raster', {}, vecId);
 
       fetch(vectorL.data)
         .then((res) => res.json())
@@ -385,5 +352,51 @@ export const layerTypes = {
           console.log(err); // eslint-disable-line no-console
         });
     }
-  }
+  },
+  'vector': {
+    update: (ctx, layerInfo, prevProps) => {
+      const { props, mbMap } = ctx;
+      const { id, source, backgroundSource } = layerInfo;
+      const vecId = `${id}-vector`;
+    },
+    hide: (ctx, layerInfo) => {
+      const { mbMap } = ctx;
+      const { id } = layerInfo;
+
+      const vecId = `${id}-vector`;
+
+      if (mbMap.getSource(vecId)) {
+        mbMap.setLayoutProperty(vecId, 'visibility', 'none');
+      }
+    },
+    show: (ctx, layerInfo) => {
+      console.log('in vector case');
+      const { props, mbMap } = ctx;
+      const { id, source } = layerInfo;
+      const vecId = `${id}-vector`;
+
+      const inferPaint = {
+        'line-color': '#f2a73a',
+        'line-opacity': 0.8,
+        'line-width': 2
+      };
+      const vectorL = {
+        ...source,
+        data: source.data
+      };
+      const rasterL = {
+        ...backgroundSource,
+        tiles: backgroundSource.tiles
+      };
+
+      toggleOrAddLayer(
+        mbMap,
+        vecId,
+        vectorL,
+        'circle',
+        inferPaint,
+        'admin-0-boundary-bg'
+      );
+    }
+  }  
 };
