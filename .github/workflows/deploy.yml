@@ -11,11 +11,14 @@ env:
   API_URL: ${{ secrets.API_URL }}
 
 jobs:
-  deploy: &deploy
+  deploy:
     runs-on: ubuntu-latest
-    environment: dit
-    if: github.ref == 'refs/heads/main'
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Configure AWS credentials from MAAP AWS Account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -38,11 +41,7 @@ jobs:
 
       - name: Deploy the resources to AWS
         env:
-          STAGE: ${{ secrets.STAGE }}
+          STAGE: ${{ steps.extract_branch.outputs.branch }}
         run: yarn deploy
 
       - run: echo "Successfully deployed."
-  deploy-aimee:
-    <<: *deploy
-    environment: aimee
-    if: github.ref == 'refs/heads/aimee-deploy'
