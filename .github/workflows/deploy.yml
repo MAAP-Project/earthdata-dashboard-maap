@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - aimee
+      - aimee-deploy
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -11,8 +11,10 @@ env:
   API_URL: ${{ secrets.API_URL }}
 
 jobs:
-  deploy:
+  deploy: &deploy
     runs-on: ubuntu-latest
+    environment: dit
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Configure AWS credentials from MAAP AWS Account
         uses: aws-actions/configure-aws-credentials@v1
@@ -35,17 +37,12 @@ jobs:
         run: yarn global add aws-cdk
 
       - name: Deploy the resources to AWS
-        environment: dit
-        if: github.ref == 'refs/heads/main'
-        env:
-          STAGE: ${{ secrets.STAGE }}
-        run: yarn deploy
-
-      - name: Deploy the resources to AWS
-        environment: aimee
-        if: github.ref == 'refs/heads/aimee'
         env:
           STAGE: ${{ secrets.STAGE }}
         run: yarn deploy
 
       - run: echo "Successfully deployed."
+
+  deploy-aimee: *deploy
+    environment: aimee
+    if: github.ref == 'refs/heads/aimee-deploy'
