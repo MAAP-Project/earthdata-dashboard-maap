@@ -36,7 +36,7 @@ jobs:
 
       - name: Deploy the resources to AWS
         env:
-          STAGE: aimee
+          STAGE: ${{ secrets.STAGE }}
         run: yarn deploy
       
       - run: echo "Successfully deployed."
