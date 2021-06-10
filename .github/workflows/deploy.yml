@@ -42,7 +42,7 @@ jobs:
         run: yarn deploy
 
       - run: echo "Successfully deployed."
-
-  deploy-aimee: *deploy
+  deploy-aimee:
+    <<: *deploy
     environment: aimee
     if: github.ref == 'refs/heads/aimee-deploy'
