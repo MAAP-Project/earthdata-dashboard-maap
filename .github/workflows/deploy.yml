@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - add-cdk-stack-naming
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -34,6 +35,8 @@ jobs:
         run: yarn global add aws-cdk
 
       - name: Deploy the resources to AWS
+        env:
+          STAGE: aimee
         run: yarn deploy
       
       - run: echo "Successfully deployed."
