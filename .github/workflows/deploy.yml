@@ -11,15 +11,21 @@ env:
   DASHBOARD_BUCKET: ${{ secrets.DASHBOARD_BUCKET }}
 
 jobs:
-  deploy:
-    environment: ${GITHUB_REF##*/}
+  fetch-branch:
     runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.extract_branch.outputs.branch }}    
     steps:
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
+  deploy:
+    needs: fetch-branch
+    environment: ${{ needs.fetch-branch.outputs.branch }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Configure AWS credentials from MAAP AWS Account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -43,7 +49,7 @@ jobs:
       - name: Deploy the resources to AWS
         env:
           API_URL: ${{ secrets.API_URL }}
-          STAGE: ${{ steps.extract_branch.outputs.branch }}
+          STAGE: ${{ needs.fetch-branch.outputs.branch }}
         run: yarn deploy
 
       - run: echo "Successfully deployed."
