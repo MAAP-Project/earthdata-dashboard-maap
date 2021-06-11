@@ -138,7 +138,7 @@ class ExpMapSecPanel extends React.Component {
         initialState={isLargeViewport()}
         headerContent={
           <PanelHeadline>
-            <PanelTitle>Insights</PanelTitle>
+            <PanelTitle>MAAP</PanelTitle>
           </PanelHeadline>
         }
         bodyContent={
