@@ -23,7 +23,6 @@ jobs:
 
   deploy:
     needs: fetch-branch
-    environment: ${{ needs.fetch-branch.outputs.branch }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials from MAAP AWS Account
