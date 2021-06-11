@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const summaries = {
-  be: (
+  boreal: (
     <>
       <p>
         Chinese authorities suspended travel and closed businesses in late
@@ -54,12 +54,6 @@ const summaries = {
   ),
   ny: (
     <>
-      <p>
-        As COVID-19 cases soared in New York City, more than 8 million residents
-        sheltered-in-place or fled the city. It remained in lockdown with strict
-        social distancing measures in place for more than two months, from March
-        through June 2020.
-      </p>
       <p>
         Satellite data reveal how changes in fossil fuel emissions and other
         economic activity during coronavirus-related lockdowns affected New York
