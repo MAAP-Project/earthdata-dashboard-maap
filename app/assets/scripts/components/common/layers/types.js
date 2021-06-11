@@ -328,10 +328,9 @@ export const layerTypes = {
         vecId,
         vectorL,
         'line',
-        inferPaint,
-        'admin-0-boundary-bg'
+        inferPaint
       );
-      toggleOrAddLayer(mbMap, rastId, rasterL, 'raster', {}, vecId);
+      toggleOrAddLayer(mbMap, rastId, rasterL, 'raster', {});
 
       fetch(vectorL.data)
         .then((res) => res.json())
@@ -372,8 +371,7 @@ export const layerTypes = {
         vecId,
         vectorL,
         'circle',
-        paint,
-        'admin-0-boundary-bg'
+        paint
       );
     }
   }  
