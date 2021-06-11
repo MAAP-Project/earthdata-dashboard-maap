@@ -9,6 +9,7 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
   DASHBOARD_BUCKET: ${{ secrets.DASHBOARD_BUCKET }}
+  API_URL: ${{ secrets.API_URL }}
 
 jobs:
   fetch-branch:
@@ -47,7 +48,6 @@ jobs:
 
       - name: Deploy the resources to AWS
         env:
-          API_URL: ${{ secrets.API_URL }}
           STAGE: ${{ needs.fetch-branch.outputs.branch }}
         run: yarn deploy
 
