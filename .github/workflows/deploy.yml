@@ -8,7 +8,9 @@ on:
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  API_URL: ${{ secrets.API_URL }}
+  MAIN_API_URL: ${{ secrets.MAIN_API_URL }}
+  # NOT IDEAL
+  AIMEE_DEPLOY_API_URL: ${{ secrets.AIMEE_DEPLOY_API_URL }}
   DASHBOARD_BUCKET: ${{ secrets.DASHBOARD_BUCKET }}
 
 jobs:
