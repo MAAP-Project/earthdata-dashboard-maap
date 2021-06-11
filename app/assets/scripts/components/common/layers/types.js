@@ -71,8 +71,7 @@ const toggleOrAddLayer = (mbMap, id, source, type, paint, beforeId) => {
         'source-layer': source['source_layer'],
         layout: {},
         paint
-      },
-      beforeId
+      }
     );
   }
 };
