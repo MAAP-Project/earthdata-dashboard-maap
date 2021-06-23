@@ -5,25 +5,34 @@ const summaries = {
   boreal: (
     <>
       <p>
-        MAAP User Working Group (UWG) members are developing a biomass product using covariates from Landsat 8, ICESat-2 Canopy Heights, and Copernicus DEM for the <a href='https://ec.europa.eu/environment/nature/natura2000/biogeog_regions/boreal/index_en.htm'>boreal region</a>. This region is 50 - 75 degrees North, encompasing parts of North America and Eurasia. The MAAP makes it possible for UWG members to collaborate virtually and scale their science using the MAAP Algorithm Development Environment (ADE) and Data Processing System (DPS).
+        MAAP User Working Group (UWG) members are developing a biomass product using covariates from Landsat 8, ICESat-2 Canopy Heights, and Copernicus DEM for the <a href='https://ec.europa.eu/environment/nature/natura2000/biogeog_regions/boreal/index_en.htm'>boreal region</a>.
       </p>
       <p>
-        <em>Inputs:</em> Pictured are the inputs to the final biomass product as well as the final product itself. Landsat8 Covariates are a UWG-generated product. ICESat-2 ATL08 is included as a dependent variable in the model and is shown here with color categories based on canopy height.
+        The boreal region is 50 - 75 degrees North, encompasing parts of North America and Eurasia.
+      </p>
+      <p>
+        The MAAP enables UWG members to collaborate virtually using with the MAAP Algorithm Development Environment (ADE) and scale their science using the MAAP Data Processing System (DPS).
+      </p>
+      <p>
+        <b>Biomass Model Inputs:</b> Pictured are the inputs to the final biomass product as well as the final product itself. Landsat8 Covariates are a UWG-generated product. ICESat-2 ATL08 is included as a dependent variable in the model and is shown here with color categories based on canopy height.
       </p>
       <p>The MAAP will enable international scientific collaboration on biomass mapping. Later this year, MAAP scientists will use the platform to share and request other groups’ biomass products to enable harmonization of those different products.
       </p>
       <p>
-        <b>ATL08 information</b>
-        Canopy height measurements taken with ICESat2 sensor are used determine tree heights across the region of interest.
+        <b>ATL08 Canopy Heights</b>
+        <br />
+        Canopy height measurements taken with ICESat-2 sensor are used to determine tree heights across the region of interest.
       </p>
       <p>
         <b>Landsat Covariates</b>
+        <br />
         14 different variables derived from Landsat 8 surface reflectance values. The composite shown here is made with data from spring and summer data between 2015-2020.
-        The map layer, shows the maximum Normalized Difference Vegatation Index (NVDI), a measure of plant health, over the time period.
+        The map layer shows the maximum Normalized Difference Vegatation Index (NVDI), a measure of plant health, over the time period.
       </p>
       <p>
-        <b>Elevation covariates derived from Copernicus 30m DEM</b>
-        5 different varaibles based on elevation are included in the product. The map layer shows the TSRI (topographic solar radiation index), a transformation of topographic aspect (directional topographic exposure). It can range from 0 (cold NE slopes) to 1 (warm SW slopes). We include TSRI as a predictor of boreal aboveground biomass density.
+        <b>Elevation Covariates derived from Copernicus 30m DEM</b>
+        <br />
+        5 different variables based on elevation are included in the product. The map layer shows the TSRI (topographic solar radiation index), a transformation of topographic aspect (directional topographic exposure). It can range from 0 (cold NE slopes) to 1 (warm SW slopes). We include TSRI as a predictor of boreal aboveground biomass density.
       </p>
 
     </>
