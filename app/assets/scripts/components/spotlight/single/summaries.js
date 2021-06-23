@@ -32,7 +32,7 @@ const summaries = {
       <p>
         <b>Elevation Covariates derived from Copernicus 30m DEM</b>
         <br />
-        5 different variables based on elevation are included in the product. The map layer shows the TSRI (topographic solar radiation index), a transformation of topographic aspect (directional topographic exposure). It can range from 0 (cold NE slopes) to 1 (warm SW slopes). We include TSRI as a predictor of boreal aboveground biomass density.
+        The final biomass product uses 5 different variables based on elevation. The elevation covariates map layer shows the TSRI (topographic solar radiation index), a transformation of topographic aspect (directional topographic exposure). It can range from 0 (cold NE slopes) to 1 (warm SW slopes). We include TSRI as a predictor of boreal aboveground biomass density.
       </p>
 
     </>
