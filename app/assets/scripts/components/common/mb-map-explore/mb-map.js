@@ -573,18 +573,21 @@ class MbMap extends React.Component {
       const getValueUrl = `https://${tileUrl.hostname}/mosaicjson/point/${lon},${lat}?url=${mosaicJsonUrl}`;
       axios.get(getValueUrl).then(response => {
         if (response.status === 200) {
-          this.setState(state => {
-            return {
-              ...state,
-              pointDetails: {
-                ...state.pointDetails,
-                values: {
-                  ...state.pointDetails.values,
-                  [layerInfo.name]: response.data?.values?.[0]?.[1]?.[bidx - 1] || null
+          const dataSetValue = response.data?.values?.[0]?.[1]?.[bidx - 1] || null;
+          if (dataSetValue) {
+            this.setState(state => {
+              return {
+                ...state,
+                pointDetails: {
+                  ...state.pointDetails,
+                  values: {
+                    ...state.pointDetails.values,
+                    [layerInfo.name]: dataSetValue
+                  }
                 }
-              }
-            };
-          });
+              };
+            });
+          }
         }
       }).catch(err =>
         /* eslint-disable-next-line no-console */
@@ -595,32 +598,30 @@ class MbMap extends React.Component {
   renderPointDetails () {
     const dataValues = this.state.pointDetails.values;
     if (!dataValues) return null;
-    let content = '';
-    for (const [key, value] of Object.entries(this.state.pointDetails.values)) {
-      if (value) {
-        content += `${key}: ${value}\n`;
-      }
-    }
-
-    if (content) {
-      return (
-        <ReactPopoverGl
-          mbMap={this.mbMap}
-          lngLat={this.state.pointDetails.coords}
-          onClose={() => this.setState({ pointDetails: {} })}
-          offset={[0, 0]}
-          title='Point value'
-          content={
-            <Prose>
-              <PopoverDetails>
-                <dt>Layers</dt>
-                {content}
-              </PopoverDetails>
-            </Prose>
-          }
-        />
-      );
-    }
+    return (
+      <ReactPopoverGl
+        mbMap={this.mbMap}
+        lngLat={this.state.pointDetails.coords}
+        onClose={() => this.setState({ pointDetails: {} })}
+        offset={[0, 0]}
+        title='Point value'
+        content={
+          <Prose>
+            <PopoverDetails>
+              <dt>Layers</dt>
+              {
+                Object.entries(this.state.pointDetails.values).map((val) => (
+                  <div key={val[0]} style={{ fontSize: '12px' }}>
+                    <span><b>{val[0]}: </b></span>
+                    <span>{parseFloat(val[1]).toFixed(4)}</span>
+                  </div>
+                ))
+              }
+            </PopoverDetails>
+          </Prose>
+        }
+      />
+    );
   }
 
   render () {
