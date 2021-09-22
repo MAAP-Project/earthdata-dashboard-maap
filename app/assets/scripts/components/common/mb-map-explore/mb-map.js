@@ -1,6 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { withTheme, ThemeProvider } from 'styled-components';
+import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import CompareMbGL from 'mapbox-gl-compare';
 import { NavLink } from 'react-router-dom';
@@ -110,6 +111,10 @@ class MbMap extends React.Component {
       popover: {
         coords: null,
         spotlightId: null
+      },
+      pointDetails: {
+        coords: null,
+        values: {}
       }
     };
 
@@ -465,6 +470,11 @@ class MbMap extends React.Component {
         zoom: round(this.mbMap.getZoom(), 2)
       });
     });
+
+    this.mbMap.on('click', (e) => {
+      this.setState({ pointDetails: { coords: e.lngLat.toArray() } });
+      this.getPointValues(e.lngLat.toArray());
+    });
   }
 
   renderOverlayDropdown (props, state) {
@@ -551,10 +561,72 @@ class MbMap extends React.Component {
     );
   }
 
+  getPointValues (longlat) {
+    const lon = longlat[0];
+    const lat = longlat[1];
+
+    this.props.activeLayers.forEach(activeLayer => {
+      const layerInfo = this.props.layers.find(layer => layer.id === activeLayer);
+      const tileUrl = new URL(layerInfo?.source.tiles[0]);
+      const mosaicJsonUrl = tileUrl.searchParams.get('url');
+      const bidx = tileUrl.searchParams.get('bidx') || 1;
+      const getValueUrl = `https://${tileUrl.hostname}/mosaicjson/point/${lon},${lat}?url=${mosaicJsonUrl}`;
+      axios.get(getValueUrl).then(response => {
+        if (response.status === 200) {
+          this.setState(state => {
+            return {
+              ...state,
+              pointDetails: {
+                ...state.pointDetails,
+                values: {
+                  ...state.pointDetails.values,
+                  [layerInfo.name]: response.data?.values?.[0]?.[1]?.[bidx - 1] || null
+                }
+              }
+            };
+          });
+        }
+      }).catch(err =>
+        /* eslint-disable-next-line no-console */
+        console.log(err));
+    });
+  }
+
+  renderPointDetails () {
+    const dataValues = this.state.pointDetails.values;
+    if (!dataValues) return null;
+    let content = '';
+    for (const [key, value] of Object.entries(this.state.pointDetails.values)) {
+      if (value) {
+        content += `${key}: ${value}\n`;
+      }
+    }
+
+    if (content) {
+      return (
+        <ReactPopoverGl
+          mbMap={this.mbMap}
+          lngLat={this.state.pointDetails.coords}
+          onClose={() => this.setState({ pointDetails: {} })}
+          offset={[0, 0]}
+          title='Point value'
+          content={
+            <Prose>
+              <PopoverDetails>
+                <dt>Layers</dt>
+                {content}
+              </PopoverDetails>
+            </Prose>
+          }
+        />
+      );
+    }
+  }
+
   render () {
     return (
       <>
-        {this.mbMap && this.renderPopover()}
+        {this.mbMap && this.renderPopover() && this.renderPointDetails()}
         <MapsContainer id='container'>
           <SingleMapContainer
             ref={(el) => {
